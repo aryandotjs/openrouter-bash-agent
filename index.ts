@@ -26,23 +26,7 @@ const bashExecute = async (command: string) => {
     }
 }
 
-const tools: ResponsesRequestToolFunction[] = [
-    {
-        type: "function",
-        name: "bash",
-        description: "Runs a bash command",
-        parameters: {
-            type: "object",
-            properties: {
-                command: {
-                    type: "string",
-                    description: "The bash command to run"
-                }
-            },
-            required: ["command"]
-        }
-    }
-]
+
 
 
 const client = new OpenRouter({
@@ -93,7 +77,28 @@ const inputs: InputsUnion1[] = [{
     role: "user"
 }]
 
+const tools: ResponsesRequestToolFunction[] = [
+    {
+        type: "function",
+        name: "bash",
+        description: "Runs a bash command",
+        parameters: {
+            type: "object",
+            properties: {
+                command: {
+                    type: "string",
+                    description: "The bash command to run"
+                }
+            },
+            required: ["command"]
+        }
+    }
+]
+
+
 while (1) {
+    console.log('= = = = = = = = = = = = = = = = = = = = = = = = ')
+
     const response = await client.responses.send({
         responsesRequest: {
             model: 'openai/gpt-5.2',
@@ -102,6 +107,8 @@ while (1) {
             tools
         },
     });
+
+    console.log(response, '=================================================')
 
     const toolcalls = response.output.filter(x => x.type === "function_call")
 
